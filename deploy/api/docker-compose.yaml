@@ -1,0 +1,58 @@
+version: "3.4"
+
+x-env: &default-env
+  DB_DIALECT: postgres
+  DB_HOST: database
+  DB_NAME: ninja
+  DB_USER: ninja
+  DB_PASSWORD: swords
+
+networks:
+  internal:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.24.0.0/16
+
+services:
+  database:
+    restart: always
+    image: postgres:12
+    shm_size: 4g
+    environment:
+      POSTGRES_USER: ninja
+      POSTGRES_DB: ninja
+      POSTGRES_PASSWORD: swords
+    volumes:
+      - /opt/postgres:/var/lib/postgresql/data
+    networks:
+      internal:
+        aliases:
+          - database
+
+  adminer:
+    image: adminer
+    restart: always
+    environment:
+      ADMINER_PLUGINS: "json-column"
+    ports:
+      - 8080:8080
+    networks:
+      - internal
+
+  api:
+    restart: always
+    image: omegaatt36/api:latest
+    environment:
+      <<: *default-env
+    ports:
+      - 8787:8787
+    networks:
+      - internal
+
+  dbmigration:
+    image: cirple.tw/stranityng/dbmigration:latest
+    environment:
+      <<: *default-env
+    networks:
+      - internal
