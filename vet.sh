@@ -46,8 +46,7 @@ if [[ "$1" = "-install" ]]; then
       golang.org/x/tools/cmd/goimports \
       honnef.co/go/tools/cmd/staticcheck \
       github.com/client9/misspell/cmd/misspell \
-      google.golang.org/protobuf/cmd/protoc-gen-go \
-      google.golang.org/grpc/cmd/protoc-gen-go-grpc
+      github.com/gogo/protobuf/protoc-gen-gogoslick
     popd
   else
     # Ye olde `go get` incantation.
@@ -58,7 +57,7 @@ if [[ "$1" = "-install" ]]; then
       golang.org/x/tools/cmd/goimports \
       honnef.co/go/tools/cmd/staticcheck \
       github.com/client9/misspell/cmd/misspell \
-      google.golang.org/protobuf/protoc-gen-go
+      github.com/gogo/protobuf/protoc-gen-gogoslick
   fi
   exit 0
 elif [[ "$#" -ne 0 ]]; then
