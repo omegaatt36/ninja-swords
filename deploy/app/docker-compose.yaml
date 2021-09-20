@@ -6,6 +6,7 @@ x-env: &default-env
   DB_NAME: ninja
   DB_USER: ninja
   DB_PASSWORD: swords
+  BOT_TOKEN: fill-me
 
 networks:
   internal:
@@ -16,8 +17,8 @@ networks:
 
 services:
   database:
-    restart: always
     image: postgres:12
+    restart: always
     shm_size: 4g
     environment:
       POSTGRES_USER: ninja
@@ -41,12 +42,20 @@ services:
       - internal
 
   api:
-    restart: always
     image: omegaatt36/api:latest
+    restart: always
     environment:
       <<: *default-env
     ports:
       - 8787:8787
+    networks:
+      - internal
+
+  bot:
+    image: omegaatt36/bot:latest
+    restart: always
+    environment:
+      <<: *default-env
     networks:
       - internal
 

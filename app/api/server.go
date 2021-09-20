@@ -30,7 +30,7 @@ func (s *Server) RegisterMiddleware(r *gin.Engine) {
 		AllowCredentials: false,
 		MaxAge:           12 * time.Hour,
 	}
-	config.AllowAllOrigins = true
+	config.AllowAllOrigins = false
 
 	r.Use(cors.New(config))
 	r.Use(RateLimit())
