@@ -2,6 +2,7 @@ package swords
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"ninga-swords/logging"
 	"time"
@@ -11,6 +12,17 @@ import (
 
 // Server is a telebot server.
 type Server struct {
+}
+
+// RegisterEndpoint installs api representation layer processing function.
+func (s *Server) RegisterEndpoint(b *tb.Bot) {
+	b.Handle(tb.OnText, func(m *tb.Message) {
+		b.Send(m.Sender, fmt.Sprintf("echo \"%s\"", m.Text))
+	})
+
+	b.Handle("/hello", func(m *tb.Message) {
+		b.Send(m.Sender, "Hello World!")
+	})
 }
 
 // Start starts telebot server.
@@ -25,12 +37,10 @@ func (s *Server) Start(ctx context.Context, botToken string) {
 		return
 	}
 
-	sowrd.Handle("/hello", func(m *tb.Message) {
-		sowrd.Send(m.Sender, "Hello World!")
-	})
-
 	logging.Get().Info("starts serving bot")
-	sowrd.Start()
+	go func() {
+		sowrd.Start()
+	}()
 
 	<-ctx.Done()
 	logging.Get().Info("stops serving bot")
