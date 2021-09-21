@@ -27,7 +27,7 @@ func (s *Server) RegisterEndpoint(b *tb.Bot) {
 
 // Start starts telebot server.
 func (s *Server) Start(ctx context.Context, botToken string) {
-	sowrd, err := tb.NewBot(tb.Settings{
+	sword, err := tb.NewBot(tb.Settings{
 		Token:  botToken,
 		Poller: &tb.LongPoller{Timeout: 10 * time.Second},
 	})
@@ -37,12 +37,14 @@ func (s *Server) Start(ctx context.Context, botToken string) {
 		return
 	}
 
+	s.RegisterEndpoint(sword)
+
 	logging.Get().Info("starts serving bot")
 	go func() {
-		sowrd.Start()
+		sword.Start()
 	}()
 
 	<-ctx.Done()
 	logging.Get().Info("stops serving bot")
-	sowrd.Stop()
+	sword.Stop()
 }
