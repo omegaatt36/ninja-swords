@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strconv"
 	"time"
 
 	tele "gopkg.in/telebot.v3"
@@ -25,7 +26,7 @@ func (s *Server) RegisterEndpoint() {
 
 		// Reply buttons.
 		btnStart    = menu.Text("/start")
-		btnRegister = menu.Text("/register")
+		btnRegister = menu.Text("/hello")
 	)
 
 	menu.Reply(
@@ -41,23 +42,8 @@ func (s *Server) RegisterEndpoint() {
 		return m.Send("Hello World!")
 	})
 
-	s.sword.Handle("/register", func(m tele.Context) error {
-		return nil
-	})
-
-	s.sword.Handle("/create_auto_reply", func(m tele.Context) error {
-		// tele.CallbackEndpoint
-		return nil
-	})
-
-	s.sword.Handle(tele.OnSticker, func(m tele.Context) error {
-		if m.Chat().Type == tele.ChatGroup {
-			return nil
-		}
-
-		logging.Get().Debugf("%d-%s send %s",
-			m.Message().Sender.ID, m.Message().Sender.Username, m.Message().Sticker.Emoji)
-		return m.Send(m.Message().Sticker)
+	s.sword.Handle(tele.OnAddedToGroup, func(m tele.Context) error {
+		return m.Send("Ahoy")
 	})
 
 	s.sword.Handle(tele.OnText, func(m tele.Context) error {
@@ -65,9 +51,33 @@ func (s *Server) RegisterEndpoint() {
 			return nil
 		}
 
-		logging.Get().Debugf("%d-%s send %s",
-			m.Message().Sender.ID, m.Message().Sender.Username, m.Message().Text)
-		return m.Send(fmt.Sprintf("echo \"%s\"", m.Text()))
+		text := m.Text()
+
+		return m.Send(fmt.Sprintf("echo %s", text))
+	})
+
+	s.sword.Handle(tele.OnQuery, func(c tele.Context) error {
+		functions := []string{
+			"/start",
+			"/hello",
+		}
+
+		results := make(tele.Results, len(functions))
+		for i, fn := range functions {
+			result := &tele.ArticleResult{
+				Title:       fn,
+				Text:        fn,
+				Description: fn,
+			}
+
+			results[i] = result
+			results[i].SetResultID(strconv.Itoa(i + 1))
+		}
+
+		return c.Answer(&tele.QueryResponse{
+			Results:   results,
+			CacheTime: 60, // a minute
+		})
 	})
 }
 

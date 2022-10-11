@@ -9,7 +9,6 @@ import (
 	"os/signal"
 	"runtime/debug"
 	"syscall"
-	"time"
 
 	"github.com/urfave/cli/v2"
 	"ninja-swords/cliflag"
@@ -59,7 +58,7 @@ func (a *App) wrapMain(c *cli.Context) error {
 	}()
 
 	a.Main(ctx, c)
-	time.Sleep(3 * time.Second)
+	// time.Sleep(3 * time.Second)
 	log.Println("terminated")
 
 	return nil
