@@ -1,84 +1,89 @@
 package botwrapper
 
 import (
-	"strconv"
-	"strings"
+	"context"
+	"fmt"
+	"log"
 
-	"gopkg.in/telebot.v3"
+	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	"ninja-swords/logging"
 )
 
 // Engine defines bot engine.
 type Engine struct {
-	bot *telebot.Bot
+	bot *tgbotapi.BotAPI
 
-	menu *telebot.ReplyMarkup
-
-	buttons []telebot.Btn
-	queries []telebot.Result
+	synchronous     bool
+	onError         func(error, *Context)
+	handlers        map[string]handler
+	middlewareFuncs []HandlerFunc
 }
 
-// Handler describe bot handler.
-type Handler struct {
-	Endpoint       string
-	HandlerFunc    telebot.HandlerFunc
-	MiddleWareFunc []telebot.MiddlewareFunc
-	Describe       string
-	OnQuery        bool
-	OnButton       bool
+// Use adds middleware to the engine.
+func (e *Engine) Use(middleware ...HandlerFunc) {
+	e.middlewareFuncs = append(e.middlewareFuncs, middleware...)
 }
 
 // NewEngine return engine with bot.
-func NewEngine(bot *telebot.Bot) *Engine {
+func NewEngine(bot *tgbotapi.BotAPI) *Engine {
 	return &Engine{
-		bot: bot,
-		menu: &telebot.ReplyMarkup{
-			ResizeKeyboard: true,
-		},
+		bot:      bot,
+		onError:  defaultOnError,
+		handlers: make(map[string]handler),
 	}
 }
 
 // Apply applies handler to bot.
-func (e *Engine) Apply(handler Handler) {
-	e.bot.Handle(handler.Endpoint, handler.HandlerFunc, handler.MiddleWareFunc...)
-
-	if !strings.HasPrefix(handler.Endpoint, "/") {
-		return
+func (e *Engine) Apply(endpoint string, handler HandlerFunc, middlewareFuncs ...HandlerFunc) {
+	if _, ok := e.handlers[endpoint]; ok {
+		panic(fmt.Errorf("endpoint(%s) is set repeatedly", endpoint))
 	}
 
-	if handler.OnButton {
-		e.buttons = append(e.buttons, e.menu.Text(handler.Endpoint))
-	}
-
-	if handler.OnQuery {
-		result := &telebot.ArticleResult{
-			Title:       handler.Endpoint,
-			Text:        handler.Endpoint,
-			Description: handler.Describe,
+	e.handlers[endpoint] = func(c *Context) {
+		if len(e.middlewareFuncs) > 0 {
+			middlewareFuncs = append(e.middlewareFuncs, middlewareFuncs...)
 		}
 
-		result.SetResultID(strconv.Itoa(len(e.queries) + 1))
-		e.queries = append(e.queries, result)
+		for index := 0; index < len(middlewareFuncs) && !c.IsAborted(); index++ {
+			middlewareFuncs[index](c)
+		}
+
+		if c.IsAborted() {
+			return
+		}
+
+		handler(c)
 	}
 }
 
 // Start starts bot.
-func (e *Engine) Start() {
-	if len(e.buttons) > 0 {
-		for _, button := range e.buttons {
-			e.menu.Reply(e.menu.Row(button))
-		}
-	}
-
-	if len(e.queries) > 0 {
-		e.bot.Handle(telebot.OnQuery, func(c telebot.Context) error {
-			return c.Answer(&telebot.QueryResponse{
-				Results:   e.queries,
-				CacheTime: 60,
-			})
-		})
-	}
-
+func (e *Engine) Start(ctx context.Context) {
+	u := tgbotapi.NewUpdate(0)
+	u.Timeout = 60
+	updates := e.bot.GetUpdatesChan(u)
 	go func() {
-		e.bot.Start()
+		for ctx.Err() == nil {
+			select {
+			case <-ctx.Done():
+				if err := ctx.Err(); err != nil {
+					logging.Get().Error(err)
+				}
+				return
+			case update := <-updates:
+				if update.Message == nil {
+					continue
+				}
+
+				if !update.Message.IsCommand() {
+					continue
+				}
+
+				log.Printf("\033[1;30;32m[%s] %s\033[0m",
+					update.Message.From.UserName,
+					update.Message.Command(),
+				)
+				e.processUpdate(update.Message.Command(), update)
+			}
+		}
 	}()
 }

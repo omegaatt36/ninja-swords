@@ -3,7 +3,7 @@ package user
 import (
 	"fmt"
 
-	"gopkg.in/telebot.v3"
+	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	botwrapper "ninja-swords/app/swords/bot-wrapper"
 )
 
@@ -18,43 +18,10 @@ func NewController() *Controller {
 
 // RegisterHandler register handles.
 func (x *Controller) RegisterHandler(e *botwrapper.Engine) {
-	e.Apply(botwrapper.Handler{
-		Endpoint: "/start",
-		HandlerFunc: func(m telebot.Context) error {
-			return m.Send(fmt.Sprintf("Welcome %s", m.Message().Sender.Username))
-		},
-		Describe: "send welcome.",
-		OnQuery:  true,
-		OnButton: true,
-	})
+	e.Apply("start", x.start)
+}
 
-	e.Apply(botwrapper.Handler{
-		Endpoint: "/hello",
-		HandlerFunc: func(m telebot.Context) error {
-			return m.Send("Hello World!")
-		},
-		Describe: "send welcome.",
-		OnQuery:  true,
-		OnButton: true,
-	})
-
-	e.Apply(botwrapper.Handler{
-		Endpoint: telebot.OnAddedToGroup,
-		HandlerFunc: func(m telebot.Context) error {
-			return m.Send("Ahoy")
-		},
-	})
-
-	e.Apply(botwrapper.Handler{
-		Endpoint: telebot.OnText,
-		HandlerFunc: func(m telebot.Context) error {
-			if m.Chat().Type != telebot.ChatGroup {
-				return nil
-			}
-
-			text := m.Text()
-
-			return m.Send(fmt.Sprintf("echo %s", text))
-		},
-	})
+func (x *Controller) start(c *botwrapper.Context) {
+	msg := tgbotapi.NewMessage(c.Message.Chat.ID, fmt.Sprintf("Welcome %s", c.Message.From.UserName))
+	c.Send(msg)
 }
