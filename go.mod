@@ -10,7 +10,7 @@ require (
 	github.com/op/go-logging v0.0.0-20160315200505-970db520ece7
 	github.com/prometheus/client_golang v1.13.0
 	github.com/satori/go.uuid v1.2.0
-	github.com/stretchr/testify v1.8.0
+	github.com/stretchr/testify v1.8.1
 	github.com/urfave/cli/v2 v2.19.2
 	golang.org/x/time v0.0.0-20220922220347-f3bd1da661af
 	gopkg.in/telebot.v3 v3.1.2
