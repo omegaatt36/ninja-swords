@@ -1,8 +1,8 @@
 package health
 
 import (
+	"github.com/omegaatt36/ninja-swords/cliflag"
 	"github.com/urfave/cli/v2"
-	"ninja-swords/cliflag"
 )
 
 type config struct {

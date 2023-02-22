@@ -5,10 +5,10 @@ import (
 	"log"
 	"time"
 
+	botwrapper "github.com/omegaatt36/ninja-swords/app/swords/bot-wrapper"
+	"github.com/omegaatt36/ninja-swords/app/swords/module/user"
+	"github.com/omegaatt36/ninja-swords/logging"
 	"gopkg.in/telebot.v3"
-	botwrapper "ninja-swords/app/swords/bot-wrapper"
-	"ninja-swords/app/swords/module/user"
-	"ninja-swords/logging"
 )
 
 // Server is a telebot server.

@@ -3,10 +3,10 @@ package main
 import (
 	"context"
 
+	"github.com/omegaatt36/ninja-swords/app"
+	"github.com/omegaatt36/ninja-swords/app/swords"
+	"github.com/omegaatt36/ninja-swords/health"
 	"github.com/urfave/cli/v2"
-	"ninja-swords/app"
-	"ninja-swords/app/swords"
-	"ninja-swords/health"
 )
 
 // Main starts process in cli.

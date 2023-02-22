@@ -10,8 +10,8 @@ import (
 	"runtime/debug"
 	"syscall"
 
+	"github.com/omegaatt36/ninja-swords/cliflag"
 	"github.com/urfave/cli/v2"
-	"ninja-swords/cliflag"
 )
 
 // App is cli wrapper that do some common operation and creates signal handler.

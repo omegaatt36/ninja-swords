@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/omegaatt36/ninja-swords/logging"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"ninja-swords/logging"
 )
 
 const (

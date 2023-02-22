@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"time"
 
-	"ninja-swords/logging"
+	"github.com/omegaatt36/ninja-swords/logging"
 )
 
 // StartVarsPoller starts vars poller and triggers callback function.

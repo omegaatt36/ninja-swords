@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/omegaatt36/ninja-swords/cliflag"
 	"github.com/urfave/cli/v2"
-	"ninja-swords/cliflag"
 )
 
 var keys map[string]*string

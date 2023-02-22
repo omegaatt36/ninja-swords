@@ -5,12 +5,12 @@ import (
 	"log"
 
 	"github.com/glebarez/sqlite"
+	"github.com/omegaatt36/ninja-swords/cliflag"
 	"github.com/urfave/cli/v2"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlserver"
 	"gorm.io/gorm"
-	"ninja-swords/cliflag"
 )
 
 var defaultOption ConnectOption

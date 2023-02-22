@@ -5,8 +5,8 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/omegaatt36/ninja-swords/pkg/fluent"
 	"github.com/op/go-logging"
-	"ninja-swords/pkg/fluent"
 )
 
 var (

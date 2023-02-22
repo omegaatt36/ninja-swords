@@ -1,4 +1,4 @@
-module ninja-swords/test/tools
+module github.com/omegaatt36/ninja-swords/test/tools
 
 go 1.19
 

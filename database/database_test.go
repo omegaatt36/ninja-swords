@@ -3,11 +3,11 @@ package database_test
 import (
 	"testing"
 
+	"github.com/omegaatt36/ninja-swords/database"
+	"github.com/omegaatt36/ninja-swords/logging"
+	"github.com/omegaatt36/ninja-swords/models"
 	"github.com/stretchr/testify/assert"
 	"gorm.io/gorm"
-	"ninja-swords/database"
-	"ninja-swords/logging"
-	"ninja-swords/models"
 )
 
 type Animal struct {

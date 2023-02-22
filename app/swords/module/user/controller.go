@@ -3,8 +3,8 @@ package user
 import (
 	"fmt"
 
+	botwrapper "github.com/omegaatt36/ninja-swords/app/swords/bot-wrapper"
 	"gopkg.in/telebot.v3"
-	botwrapper "ninja-swords/app/swords/bot-wrapper"
 )
 
 // Controller defines controller.

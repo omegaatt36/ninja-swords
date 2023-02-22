@@ -5,8 +5,8 @@ import (
 	"os"
 	"path"
 
+	"github.com/omegaatt36/ninja-swords/cliflag"
 	"github.com/urfave/cli/v2"
-	"ninja-swords/cliflag"
 )
 
 var defaultCfg config

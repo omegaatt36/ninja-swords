@@ -9,9 +9,9 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"ninja-swords/appmodule/bot"
-	"ninja-swords/logging"
-	ginprometheus "ninja-swords/pkg/go-gin-prometheus"
+	"github.com/omegaatt36/ninja-swords/appmodule/bot"
+	"github.com/omegaatt36/ninja-swords/logging"
+	ginprometheus "github.com/omegaatt36/ninja-swords/pkg/go-gin-prometheus"
 )
 
 // Server is a HTTP server.

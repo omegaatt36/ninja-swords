@@ -1,4 +1,4 @@
-module ninja-swords
+module github.com/omegaatt36/ninja-swords
 
 go 1.19
 
