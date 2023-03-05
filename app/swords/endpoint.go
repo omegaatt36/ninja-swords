@@ -1,4 +1,4 @@
-package user
+package swords
 
 import (
 	"fmt"
@@ -7,17 +7,7 @@ import (
 	"gopkg.in/telebot.v3"
 )
 
-// Controller defines controller.
-type Controller struct {
-}
-
-// NewController returns controller.
-func NewController() *Controller {
-	return &Controller{}
-}
-
-// RegisterHandler register handles.
-func (x *Controller) RegisterHandler(e *botwrapper.Engine) {
+func registerHandler(e *botwrapper.Engine) {
 	e.Apply(botwrapper.Handler{
 		Endpoint: "/start",
 		HandlerFunc: func(m telebot.Context) error {
@@ -42,19 +32,6 @@ func (x *Controller) RegisterHandler(e *botwrapper.Engine) {
 		Endpoint: telebot.OnAddedToGroup,
 		HandlerFunc: func(m telebot.Context) error {
 			return m.Send("Ahoy")
-		},
-	})
-
-	e.Apply(botwrapper.Handler{
-		Endpoint: telebot.OnText,
-		HandlerFunc: func(m telebot.Context) error {
-			if m.Chat().Type != telebot.ChatGroup {
-				return nil
-			}
-
-			text := m.Text()
-
-			return m.Send(fmt.Sprintf("echo %s", text))
 		},
 	})
 }

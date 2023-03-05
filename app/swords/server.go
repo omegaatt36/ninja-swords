@@ -6,7 +6,6 @@ import (
 	"time"
 
 	botwrapper "github.com/omegaatt36/ninja-swords/app/swords/bot-wrapper"
-	"github.com/omegaatt36/ninja-swords/app/swords/module/user"
 	"github.com/omegaatt36/ninja-swords/logging"
 	"gopkg.in/telebot.v3"
 )
@@ -29,8 +28,7 @@ func (s *Server) Start(ctx context.Context, botToken string) {
 
 	engine := botwrapper.NewEngine(sword)
 
-	userX := user.NewController()
-	userX.RegisterHandler(engine)
+	registerHandler(engine)
 
 	logging.Get().Info("starts serving bot")
 	engine.Start()
