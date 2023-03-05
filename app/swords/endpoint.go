@@ -34,4 +34,15 @@ func registerHandler(e *botwrapper.Engine) {
 			return m.Send("Ahoy")
 		},
 	})
+
+	echoX := newEchoService()
+
+	e.Apply(botwrapper.Handler{
+		Endpoint:    "/echo",
+		HandlerFunc: echoX.openEchoSession,
+	})
+	e.Apply(botwrapper.Handler{
+		Endpoint:    telebot.OnText,
+		HandlerFunc: echoX.doEcho,
+	})
 }
