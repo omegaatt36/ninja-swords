@@ -4,7 +4,7 @@ CMDS=$(patsubst $(CMD_DIR)/%,%,$(wildcard $(CMD_DIR)/*))
 
 .PHONY: fmt check test
 
-all: fmt check test bin
+all: fmt check test
 
 fmt:
 	gofmt -s -w -l .
